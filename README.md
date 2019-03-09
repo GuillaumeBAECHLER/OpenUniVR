@@ -23,6 +23,8 @@ Concernant la persistance des données, nous avons choisi l’intégration de de
 -	L’utilisation de Redis pour le système de messagerie intégré à l’application, qui se doit d’être à accès rapide. Nous utiliserons également **Redis** pour la gestion des caches sessions.
 -	Un RDBMS comme **MariaDB** pour la persistance des autres types de données, comme la gestion des comptes par exemple.
 
+Pour la partie modélisation 3D, nous utiliserons le logiciel Open-Source **Blender**. Le gros avantage de cet outil est la grande communauté de développeur le soutenant, ce qui lui a permis de se doter de l’ensemble des fonctionnalités requises par l’industrie des jeux vidéo et du cinéma d’animation. Ainsi les tâches de modélisation 3D, Texturing et Animation seront principalement réalisées sur cet outil.
+
 ### Les spécifications graphiques
 
 TODO
