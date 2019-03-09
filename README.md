@@ -1,17 +1,14 @@
 # OpenUniVR
-----------
 
 > L’accès à distance aux écoles et l’accès à des salles de cours pour les élèves de MOOC.
 
 ## Le projet OpenUniVR
-----------
 
 À l’origine du projet OpenUniVR se trouve la volonté de création d’une ***université virtuelle*** en soutient aux ***MOOC*** mais aussi permettant ***un accès à distance à l’école***. Cette plateforme aurait pour but principal de **faciliter le rapprochement des étudiants et l’accès à des cours très interactifs et gamifiés**.
 
 Pour l'interactivité et la gamification la possibilité de manier des objets 3D donne une nouvelle dimension à l'éducation. Des jeux de team building ou encore une escape room avec des énigmes autour d'un sujet précis, permettant de découvrir tout en s'amusant, serons à l'honneur.
 
 ## La solution
-----------
 
 ### La technique
 
