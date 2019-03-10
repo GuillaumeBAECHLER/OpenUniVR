@@ -35,6 +35,11 @@ TODO
 
 ## Getting started
 
+Pour commencer il vous faut un environnement [Node.js](https://nodejs.org/en/).
+
+Si vous n'utilisez pas encore [Git](https://git-scm.com/)... c'est le moment de s'y mettre !
+Si vous débutez avec Git, un tutoriel sympa est dispo [ici](https://learngitbranching.js.org/), et si vous avez le temps, c'est pas mal les [SSH Keys](https://docs.gitlab.com/ee/ssh/) !
+
 ```bash
 $ git clone git@gitlab.com:GuillaumeBAECHLER/openunivr.git
 # si vous utilisez les ssh keys sinon :
