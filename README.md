@@ -32,3 +32,27 @@ TODO
 ### La gestion du projet
 
 TODO
+
+## Getting started
+
+```bash
+$ git clone git@gitlab.com:GuillaumeBAECHLER/openunivr.git
+# si vous utilisez les ssh keys sinon :
+$ git clone https://gitlab.com/GuillaumeBAECHLER/openunivr.git
+$ cd openunivr
+$ npm i
+# ou avec Yarn :
+$ yarn
+# Installer Parcel
+$ npm install -g parcel-bundler
+# ou avec Yarn :
+$ yarn global add parcel-bundler
+```
+
+Pour dev :
+
+```bash
+$ npm run dev
+# ou avec Yarn :
+$ yarn dev
+```
