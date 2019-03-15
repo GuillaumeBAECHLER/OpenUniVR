@@ -25,6 +25,13 @@ Concernant la persistance des données, nous avons choisi l’intégration de de
 
 Pour la partie modélisation 3D, nous utiliserons le logiciel Open-Source **Blender**. Le gros avantage de cet outil est la grande communauté de développeur le soutenant, ce qui lui a permis de se doter de l’ensemble des fonctionnalités requises par l’industrie des jeux vidéo et du cinéma d’animation. Ainsi les tâches de modélisation 3D, Texturing et Animation seront principalement réalisées sur cet outil.
 
+### Interactions entre les élèves
+
+-	Chat entre élève inscrits au même cours
+-	Possibilité d’envoyer une invitation à un cours
+-	Possibilité d’échanger des fichiers
+
+
 ### Les spécifications graphiques
 
 TODO
