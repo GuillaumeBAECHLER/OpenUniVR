@@ -23,6 +23,7 @@
   "homepage": "https://gitlab.com/GuillaumeBAECHLER/openunivr#readme",
   "dependencies": {
     "aframe": "^0.9.0",
+    "simple-peer": "^9.3.0",
     "vue": "^2.6.8",
     "vue-hot-reload-api": "^2.3.3"
   },
