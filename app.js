@@ -28,7 +28,7 @@ function bindEvents(p) {
 }
 
 function startPeer(initiator) {
-    navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
         .then(function(stream) {
             var video = document.querySelector('#emitter-video');
             let p = new Peer({
