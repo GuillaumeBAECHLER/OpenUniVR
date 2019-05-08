@@ -1,7 +1,7 @@
 require('aframe')
 import Vue from 'vue'
 import axios from 'axios'
-import App from './App.vue'
+import App from './src/App.vue'
 
 const http = axios.create({
   baseURL: 'http://localhost:3000/api'

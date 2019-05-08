@@ -12,6 +12,7 @@ const router = express.Router()
 
 router.post('/login', login)
 router.post('/register', register)
+router.get('/users', get_users)
 app.use('/api', router)
 
 app.use(express.static('../dist'))
@@ -29,13 +30,20 @@ async function login (req, res) {
 async function register (req, res) {
   const new_user = req.body
   const {password, salt} = await digest_password(new_user.password)
-  console.log(password, salt)
-  const response = await register_user({
+  const inserted = await register_user({
     ...new_user,
     password,
     salt
   })
-  console.log(response)
+  if (inserted) {
+    res.sendStatus(200)
+  }
+}
+
+async function get_users (req, res) {
+  const users = await fetch_users()
+  console.log(users)
+  res.status(200).json(users)
 }
 
 app.listen(3000, function () {
@@ -50,6 +58,18 @@ const connection = mysql.createConnection({
 })
 
 connection.connect()
+
+function fetch_users() {
+  return new Promise( ( resolve, reject ) => {
+    connection.query(
+      'SELECT email, lastname, firstname FROM account',
+      function (error, results) {
+        if (error) reject(error)
+        resolve(results)
+      }
+    )
+  })
+}
 
 function fetch_by_email_password(email, password) {
   return new Promise( async ( resolve, reject ) => {
@@ -119,11 +139,6 @@ function generate_random_bytes(nb) {
     })
   })
 }
-
-connection.query('SELECT email, lastname, firstname FROM account', function (error, results, fields) {
-  if (error) throw error
-  console.log(JSON.stringify(results))
-})
 
 // connection.end()
 
