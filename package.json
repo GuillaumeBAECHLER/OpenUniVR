@@ -23,7 +23,11 @@
   "homepage": "https://gitlab.com/GuillaumeBAECHLER/openunivr#readme",
   "dependencies": {
     "aframe": "^0.9.0",
+    "axios": "^0.18.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.16.4",
+    "mysql": "^2.17.1",
     "simple-peer": "^9.3.0",
     "vue": "^2.6.8",
     "vue-hot-reload-api": "^2.3.3"
@@ -31,6 +35,7 @@
   "devDependencies": {
     "@vue/component-compiler-utils": "^2.6.0",
     "cssnano": "^4.1.10",
+    "typescript": "^3.4.5",
     "vue-template-compiler": "^2.6.8"
   }
 }
