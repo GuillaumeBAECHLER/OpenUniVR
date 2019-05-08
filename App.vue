@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-// TODO : Transcript into fair TS (used ts for async / await support without aving to add babel config)
+// TODO : Transcript into fair TS (used ts for promise support without aving to add babel config)
 
 export default {
   name: 'App',
@@ -67,7 +67,19 @@ export default {
     },
     async register (event: Event) {
       event.preventDefault()
-
+      let payload = {
+        email: this.username,
+        password: this.password,
+        firstname: this.firstname,
+        lastname: this.lastname
+      }
+      try {
+        const response = await this.$http.post('/register', payload)
+        console.log(response.data)
+        this.connectedUser = response.data
+      } catch (err) {
+        console.error(err)
+      }
     }
   }
 }
