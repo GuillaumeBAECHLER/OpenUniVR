@@ -1,10 +1,46 @@
 const express = require('express')
 const app = express()
+const http = require('http').Server(app)
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const mysql = require('mysql')
 const crypto = require('crypto')
+const io = require('socket.io')(http)
+const session = require('express-session')
+const RedisStore = require('connect-redis')(session);
+const cookie = require('cookie')
+const cookieParser = require('cookie-parser')
 
+const options = {
+  host: 'localhost',
+  port: 6379
+}
+const sessionStore = new RedisStore(options)
+
+io.on('connection', function(socket){
+  let handshake = socket.handshake;
+  let cookieSession = cookie.parse(handshake.headers.cookie)['openunivr'];
+  sessionStore.get(cookieParser.signedCookie(cookieSession, '1937eae48d32ef32'), function (err, session) {
+    // Store socket id in database
+    set_socket_id(session.current_user.email, socket.id)
+    socket.on('call', async function (data) {
+      // On call retrieve socket id for email in database, then send call notification
+      let socketId = await get_socket_id(data.email)
+      socket.to(socketId[0].connection_id).emit('message', session.current_user)
+    })
+    socket.on('disconnect', () => {
+      set_socket_id(session.current_user.email, null)
+    })
+  })
+})
+
+app.use(session({
+  secret: '1937eae48d32ef32',
+  resave: false,
+  saveUninitialized: true,
+  store: sessionStore,
+  name: 'openunivr'
+}))
 app.use(bodyParser.json())
 app.use(cors())
 
@@ -23,6 +59,9 @@ async function login (req, res) {
   if (response.length == 0) {
     res.sendStatus(401)
   } else {
+    if (!req.session.current_user) {
+      req.session.current_user = response[0]
+    }
     res.status(200).json(response[0])
   }
 }
@@ -42,11 +81,10 @@ async function register (req, res) {
 
 async function get_users (req, res) {
   const users = await fetch_users()
-  console.log(users)
   res.status(200).json(users)
 }
 
-app.listen(3000, function () {
+http.listen(3000, function () {
   console.log('Example app listening on port 3000!')
 })
 
@@ -58,6 +96,29 @@ const connection = mysql.createConnection({
 })
 
 connection.connect()
+
+function set_socket_id(email, id) {
+  connection.query(
+    'UPDATE account SET connection_id = ? WHERE email = ? ',
+    [id, email],
+    function (error) {
+      if (error) console.error(error)
+    }
+  )
+}
+
+function get_socket_id(email) {
+  return new Promise( ( resolve, reject ) => {
+    connection.query(
+      'SELECT connection_id FROM account WHERE email = ? ',
+      email,
+      function (error, results) {
+        if (error) reject(error)
+        resolve(results)
+      }
+    )
+  }) 
+}
 
 function fetch_users() {
   return new Promise( ( resolve, reject ) => {
@@ -100,7 +161,6 @@ function get_salt_for_email(email) {
 
 function register_user(user) {
   return new Promise( ( resolve, reject ) => {
-    console.log(user)
     connection.query(
       'INSERT into account SET ?',
       user,
