@@ -18,15 +18,26 @@ const options = {
 const sessionStore = new RedisStore(options)
 
 io.on('connection', function(socket){
-  let handshake = socket.handshake;
-  let cookieSession = cookie.parse(handshake.headers.cookie)['openunivr'];
+  let handshake = socket.handshake
+  console.log(handshake)
+  let cookieSession = cookie.parse(handshake.headers.cookie)['openunivr']
   sessionStore.get(cookieParser.signedCookie(cookieSession, '1937eae48d32ef32'), function (err, session) {
+    if (err) console.error(err)
     // Store socket id in database
     set_socket_id(session.current_user.email, socket.id)
     socket.on('call', async function (data) {
       // On call retrieve socket id for email in database, then send call notification
       let socketId = await get_socket_id(data.email)
-      socket.to(socketId[0].connection_id).emit('message', session.current_user)
+      socket.on('offer', (data) => {
+          console.log(data)
+          console.log('current socket', socket.id)
+          console.log('sending to', socketId[0].connection_id)
+          socket.to(socketId[0].connection_id).emit('incoming_call', {user : {...session.current_user, socketID: socket.id}, offer: data})
+      })
+    })
+    socket.on('answer', (data) => {
+      console.log('answer recieved', data)
+      socket.to(data.to).emit('answer', data.data)
     })
     socket.on('disconnect', () => {
       set_socket_id(session.current_user.email, null)
@@ -43,14 +54,15 @@ app.use(session({
 }))
 app.use(bodyParser.json())
 app.use(cors())
+app.use(bodyParser.urlencoded({ extended: false }));
 
 const router = express.Router()
 
 router.post('/login', login)
 router.post('/register', register)
 router.get('/users', get_users)
-app.use('/api', router)
 
+app.use('/api', router)
 app.use(express.static('../dist'))
 
 async function login (req, res) {
