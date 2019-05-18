@@ -45,6 +45,7 @@ io.on('connection', function(socket){
   })
 })
 
+app.use(cors())
 app.use(session({
   secret: '1937eae48d32ef32',
   resave: false,
@@ -53,7 +54,6 @@ app.use(session({
   name: 'openunivr'
 }))
 app.use(bodyParser.json())
-app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const router = express.Router()

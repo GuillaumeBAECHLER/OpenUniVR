@@ -1,5 +1,8 @@
 <template>
-  <a-scene stats shadow="type: pcfsoft">
+  <a-scene shadow="type: pcfsoft">
+    <div class="ui-panel">
+      <users/>
+    </div>
     <a-assets>
       <img id="sky" src="../assets/images/sky.jpg">
     </a-assets>
@@ -15,12 +18,16 @@
 </template>
 
 <script>
+import Users from '../components/Users.vue'
 
 export default {
-  name: 'App',
+  name: 'University',
   data: () => ({
     color: '#121212'
   }),
+  components: {
+    Users
+  },
   methods: {
     getRandomColor: function () {
       var letters = '0123456789ABCDEF';
@@ -37,6 +44,15 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+.ui-panel {
+  position: absolute;
+  z-index: 10000;
+  background-color: #00000080;
+  top: 50vh;
+  margin: 5px;
+  width: 200px;
+  height: 200px;
+  transform: translateY(-50%)
+}
 </style>
