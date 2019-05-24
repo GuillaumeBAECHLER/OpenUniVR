@@ -18,16 +18,6 @@ AFRAME.registerComponent('show-clickable-on-hover', {
         })
         node.material.emissiveIntensity = 0.1
       })
-      /* obj.traverse(node => {
-        console.log(node)
-        node.el.addEventListener('mouseenter', () => {
-          node.material.emissive.set('white')
-        })
-        node.el.addEventListener('mouseleave', () => {
-          node.material.emissive.set('#000')
-        })
-        node.material.emissiveIntensity = 0.5
-      }) */
     })
   }
 })
@@ -40,11 +30,7 @@ AFRAME.registerComponent('move-on-click', {
   init: function () {
     let data = this.data
     let moving
-    console.log(data)
-    console.log(this.el)
     this.el.addEventListener('mousedown', (evt) => {
-      console.log('going down for real')
-      console.log(data)
       const moveto = evt.detail.intersection.point
       data.marker.setAttribute(
         'position', 

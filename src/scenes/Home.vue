@@ -24,7 +24,6 @@ export default {
     User
   },
   mounted () {
-    console.log(this.$refs.user)
     this.$refs.ground.setAttribute('move-on-click', {movingObject: this.$refs.user.$el, marker: this.$refs.user_position})
   }
 }

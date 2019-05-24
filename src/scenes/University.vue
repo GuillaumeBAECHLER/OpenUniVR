@@ -1,8 +1,5 @@
 <template>
   <a-scene>
-    <!-- <div class="ui-panel">
-      <users/>
-    </div>-->
     <a-assets>
       <img id="sky" src="../assets/images/sky.jpg">
     </a-assets>
