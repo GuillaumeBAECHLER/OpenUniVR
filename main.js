@@ -32,8 +32,63 @@ AFRAME.registerComponent('show-clickable-on-hover', {
   }
 })
 
+AFRAME.registerComponent('move-on-click', {
+  schema: {
+    movingObject: {default: null},
+    marker: {default: null}
+  },
+  init: function () {
+    let data = this.data
+    let moving
+    console.log(data)
+    console.log(this.el)
+    this.el.addEventListener('mousedown', (evt) => {
+      console.log('going down for real')
+      console.log(data)
+      const moveto = evt.detail.intersection.point
+      data.marker.setAttribute(
+        'position', 
+        {
+        ...moveto,
+        y: data.marker.getAttribute('position').y
+        }
+      )
+      data.marker.setAttribute('visible', 'true')
+      data.marker.dispatchEvent(new Event('moveuser'))
+      moving = setTimeout(function(){
+        data.marker.setAttribute('visible', 'false')
+        data.movingObject.setAttribute(
+          'position', 
+          {
+          ...moveto,
+          y: data.movingObject.getAttribute('position').y
+          }
+        )
+      }, 1000)
+    })
+    this.el.addEventListener('mouseup', () => {
+      clearTimeout(moving)
+      data.marker.setAttribute('visible', 'false')
+      data.marker.dispatchEvent(new Event('moveusercancelled'))
+      data.marker.setAttribute(
+        'scale', {
+          x: 1, y: 1, z: 1
+        }
+      )
+      data.marker.setAttribute(
+        'position',
+        {
+        ...(data.movingObject.getAttribute('position')),
+        y: data.marker.getAttribute('position').y
+        }
+      )
+    })
+  }
+})
+
 const router = new VueRouter({
-  routes // short for `routes: routes`
+  mode: 'history',
+  routes
 })
 
 Vue.use(VueRouter)
