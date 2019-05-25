@@ -73,14 +73,13 @@ AFRAME.registerComponent('move-on-click', {
 })
 
 const router = new VueRouter({
-  mode: 'history',
   routes
 })
 
 Vue.use(VueRouter)
 
 const http = axios.create({
-  baseURL: 'http://192.168.2.2:3000/api'
+  baseURL: 'http://192.168.1.94:3000/api'
 })
 Vue.prototype.$http = http
 

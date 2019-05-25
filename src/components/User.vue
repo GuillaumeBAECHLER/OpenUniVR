@@ -5,21 +5,22 @@
       </a-camera>
       <a-entity laser-controls="hand: right">
       </a-entity>
-      <a-plane 
-        shader="flat"
-        width="0.2"
-        height="0.2"
-        rotation="-90 0 0"
-        position="0.1 0 0"
-      >
-        <a-ring color="teal" position="0 0 1" radius-inner="0.2" radius-outer="0.3"></a-ring>
-      </a-plane>
+      <a-ring color="teal" rotation="-90 0 0" position="0 0.1 0" radius-inner="0.2" radius-outer="0.3">
+        <a-box width="0.1" height="0.1" depth="0.05" position="0 0.25 0.1"></a-box>
+        <a-plane width="1" height="1" rotation="55 0 0" position="0 1 1">
+          <users></users>
+        </a-plane>
+      </a-ring>
     </a-entity>
 </template>
 
 <script>
+import Users from './Users.vue'
 export default {
-  name: 'user'
+  name: 'user',
+  components: {
+    Users
+  }
 }
 </script>
 

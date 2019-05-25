@@ -2,6 +2,7 @@
   <a-scene>
     <a-assets>
       <img id="sky" src="../assets/images/sky.jpg">
+      <img id="call_image" src="../assets/images/call.png">
     </a-assets>
     <a-sky src="#sky"></a-sky>
     <a-entity :gltf-model="university_wall" rotation="0 180 0">

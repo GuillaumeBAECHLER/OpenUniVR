@@ -2,6 +2,7 @@
   <a-scene>
     <a-assets>
       <img id="sky" src="../assets/images/sky.jpg">
+      <img id="call_image" src="../assets/images/call.png">
     </a-assets>
     <a-sky src="#sky"></a-sky>
     <a-plane ref="ground" shadow="receive: true" color="#59CD90" height="25" width="25" rotation="-90 0 0"></a-plane>
