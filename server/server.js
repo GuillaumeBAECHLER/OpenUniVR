@@ -17,6 +17,9 @@ const options = {
 }
 const sessionStore = new RedisStore(options)
 
+let sockets = {}
+let homeUsers = {}
+
 io.on('connection', function(socket){
   let handshake = socket.handshake
   console.log(handshake)
@@ -24,23 +27,60 @@ io.on('connection', function(socket){
   sessionStore.get(cookieParser.signedCookie(cookieSession, '1937eae48d32ef32'), function (err, session) {
     if (err) console.error(err)
     // Store socket id in database
-    set_socket_id(session.current_user.email, socket.id)
+    console.log(session)
+    sockets[session.current_user.email] = socket.id
+    // set_socket_id(session.current_user.email, socket.id)
     socket.on('call', async function (data) {
       // On call retrieve socket id for email in database, then send call notification
-      let socketId = await get_socket_id(data.email)
+      // let socketId = await get_socket_id(data.email)
+      let socketId = sockets[data.email]
       socket.on('offer', (data) => {
           console.log(data)
           console.log('current socket', socket.id)
-          console.log('sending to', socketId[0].connection_id)
-          socket.to(socketId[0].connection_id).emit('incoming_call', {user : {...session.current_user, socketID: socket.id}, offer: data})
+          console.log('sending to', socketId)
+          socket.to(socketId).emit('incoming_call', {user : {...session.current_user, socketID: socket.id}, offer: data})
       })
     })
     socket.on('answer', (data) => {
       console.log('answer recieved', data)
       socket.to(data.to).emit('answer', data.data)
     })
+    socket.on('connect_to_room', (room) => {
+      switch (room) {
+        case 'home' :
+          socket.join(room, () => {
+            io.to(socket.id).emit('users', Object.values(homeUsers))
+            homeUsers[session.current_user.email] = {
+              id: socket.id,
+              firstname: session.current_user.firstname,
+              position: {x:0, y:0, z:0}
+            }
+            socket.broadcast.to(room).emit('user_connected', homeUsers[session.current_user.email])
+            socket.on('move', (data) => {
+              console.log(data)
+              homeUsers[session.current_user.email] = {
+                ...homeUsers[session.current_user.email],
+                position: data
+              }
+              socket.broadcast.to(room).emit('user_moved', homeUsers[session.current_user.email])
+            })
+          })
+        break
+      }
+    })
+    socket.on('disconnect_from_room', (room) => {
+      switch (room) {
+        case 'home' :
+          socket.leave(room, () => {
+            io.to(room).emit('user_disconnected', homeUsers[session.current_user.email])
+            delete homeUsers[session.current_user.email]
+          })
+        break
+      }
+    })
     socket.on('disconnect', () => {
-      set_socket_id(session.current_user.email, null)
+      delete sockets[session.current_user.email]
+      // set_socket_id(session.current_user.email, null)
     })
   })
 })
