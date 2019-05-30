@@ -4,6 +4,17 @@ import axios from 'axios'
 import App from './src/App.vue'
 import VueRouter from 'vue-router'
 import routes from './src/router'
+import io from 'socket.io-client'
+
+let url = 'http://192.168.1.94:3000'
+let socket
+let getSocket = function () {
+  if (!socket) {
+    socket = io(url)
+  }
+  return socket
+}
+
 
 AFRAME.registerComponent('show-clickable-on-hover', {
   init: function () {
@@ -43,13 +54,15 @@ AFRAME.registerComponent('move-on-click', {
       data.marker.dispatchEvent(new Event('moveuser'))
       moving = setTimeout(function(){
         data.marker.setAttribute('visible', 'false')
-        data.movingObject.setAttribute(
-          'position', 
-          {
+        let newPosition = {
           ...moveto,
           y: data.movingObject.getAttribute('position').y
-          }
+        }
+        data.movingObject.setAttribute(
+          'position', 
+          newPosition
         )
+        getSocket().emit('move', newPosition)
       }, 1000)
     })
     this.el.addEventListener('mouseup', () => {
@@ -79,10 +92,11 @@ const router = new VueRouter({
 Vue.use(VueRouter)
 
 const http = axios.create({
-  baseURL: 'http://192.168.1.94:3000/api'
+  baseURL: url+'/api'
 })
-Vue.prototype.$http = http
 
+Vue.prototype.$http = http
+Vue.prototype.$socket = getSocket
 new Vue({
   components: { App },
   router,

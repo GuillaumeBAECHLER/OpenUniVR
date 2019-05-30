@@ -3,7 +3,6 @@
       <a-entity 
         v-for="(user, index) in users"
         :key="`user-${index}`"
-        @click="call(user.email)"
         material="shader: flat; color: #f3f6f8"
         geometry="primitive: plane; height: 0.08;"
         :text="{
@@ -18,26 +17,27 @@
             src="#call_image"
             position="0.4 0 0.01"
             animation__mouseenter="startEvents: mouseenter; property: scale; to: 1.2 1.2 1.2; dur: 100; easing: linear;"
-            animation__mouseleave="startEvents: mouseleave; property: scale; to: 1 1 1; dur: 100; easing: linear;">
+            animation__mouseleave="startEvents: mouseleave; property: scale; to: 1 1 1; dur: 100; easing: linear;"
+            @click="call(user.email)"
+          />
         </a-entity>
       <audio controls autoplay ref="audio"></audio>
     </a-entity>
 </template>
 
 <script lang="ts">
-import io from 'socket.io-client'
 import Peer from 'simple-peer'
 
 export default {
   name: 'Users',
   data: () => ({
-    users: [],
-    socket: null
+    users: []
   }),
   async created () {
+    console.log('CREATED')
     this.users = (await this.$http.get('/users')).data
-    this.socket = io('http://192.168.1.94:3000')
-    this.socket.on('incoming_call', async (data) => {
+    console.log('GOT USERS')
+    this.$socket().on('incoming_call', async (data) => {
       const user = data.user
       console.log(`${user.firstname} ${user.lastname} - ${user.socketID} - essaye de vous joindre !`, data.offer)
       const p = await this.startPeer(false, user.socketID)
@@ -46,9 +46,9 @@ export default {
   },
   methods: {
     async call(email) {
-      this.socket.emit('call', { email })
+      this.$socket().emit('call', { email })
       const p = await this.startPeer(true)
-      this.socket.on('answer', (data) => {
+      this.$socket().on('answer', (data) => {
         p.signal(data)
       })
     },
@@ -77,9 +77,9 @@ export default {
       })
       p.on('signal', function(data) {
         if (data.type === 'offer') {
-          vm.socket.emit('offer', data)
+          vm.$socket().emit('offer', data)
         } else if (data.type === 'answer') {
-          vm.socket.emit('answer', {to: distantSocketID, data} )
+          vm.$socket().emit('answer', {to: distantSocketID, data} )
         }
       })
       p.on('stream', function(stream) {

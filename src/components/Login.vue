@@ -1,7 +1,6 @@
 <template>
     <div v-if="connectedUser">
     <p>Welcome {{connectedUser.firstname}} {{connectedUser.lastname}}</p>
-    <users/>
   </div>
   <div v-else>
     <p>Please Login</p>
@@ -40,7 +39,6 @@
 
 <script lang="ts">
 // TODO : Transcript into fair TS or remove TS use (used ts for promise support without aving to add babel config)
-import Users from './Users.vue'
 
 export default {
   name: 'Login',
@@ -52,9 +50,6 @@ export default {
     firstname: '',
     lastname: ''
   }),
-  components: {
-    Users
-  },
   methods: {
     async login (event: Event) {
       event.preventDefault()
