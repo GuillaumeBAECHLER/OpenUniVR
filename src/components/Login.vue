@@ -1,8 +1,5 @@
 <template>
-  <div v-if="connectedUser">
-    <p>Welcome {{connectedUser.firstname}} {{connectedUser.lastname}}</p>
-  </div>
-  <div v-else>
+  <div>
     <p>Please Login</p>
     <form @submit="login">
       <label for="login">Login :</label>
@@ -39,12 +36,12 @@
 
 <script lang="ts">
 // TODO : Transcript into fair TS or remove TS use (used ts for promise support without aving to add babel config)
+import store from '../store'
 
 export default {
   name: 'Login',
   data: () => ({
     // TODO : use Vuex for storing user ...
-    connectedUser: null,
     username: '',
     password: '',
     firstname: '',
@@ -59,8 +56,8 @@ export default {
       }
       try {
         const response = await this.$http.post('/login', payload)
-        console.log(response.data)
-        this.connectedUser = response.data
+        store.setLogin(response.data)
+        this.$router.push({ name: 'app' })
       } catch (err) {
         console.error(err)
       }
@@ -75,8 +72,9 @@ export default {
       }
       try {
         const response = await this.$http.post('/register', payload)
-        console.log(response.data)
         this.connectedUser = response.data
+        store.setLogin(response.data)
+        this.$router.push({ name: 'app' })
       } catch (err) {
         console.error(err)
       }

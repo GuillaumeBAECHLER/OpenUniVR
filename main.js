@@ -2,8 +2,7 @@ require('aframe')
 import Vue from 'vue'
 import axios from 'axios'
 import App from './src/App.vue'
-import VueRouter from 'vue-router'
-import routes from './src/router'
+import router from './src/router'
 import io from 'socket.io-client'
 
 let url = 'http://192.168.43.187:3000'
@@ -84,12 +83,6 @@ AFRAME.registerComponent('move-on-click', {
     })
   }
 })
-
-const router = new VueRouter({
-  routes
-})
-
-Vue.use(VueRouter)
 
 const http = axios.create({
   baseURL: url+'/api'
