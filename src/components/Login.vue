@@ -1,5 +1,5 @@
 <template>
-    <div v-if="connectedUser">
+  <div v-if="connectedUser">
     <p>Welcome {{connectedUser.firstname}} {{connectedUser.lastname}}</p>
   </div>
   <div v-else>

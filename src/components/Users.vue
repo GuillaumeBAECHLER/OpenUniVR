@@ -21,11 +21,11 @@
             @click="call(user.email)"
           />
         </a-entity>
-      <audio controls autoplay ref="audio"></audio>
     </a-entity>
 </template>
 
 <script lang="ts">
+import { EventBus } from '../event-bus'
 import Peer from 'simple-peer'
 
 export default {
@@ -34,64 +34,14 @@ export default {
     users: []
   }),
   async created () {
-    console.log('CREATED')
+    console.log('CREATED USERS')
     this.users = (await this.$http.get('/users')).data
     console.log('GOT USERS')
-    this.$socket().on('incoming_call', async (data) => {
-      const user = data.user
-      console.log(`${user.firstname} ${user.lastname} - ${user.socketID} - essaye de vous joindre !`, data.offer)
-      const p = await this.startPeer(false, user.socketID)
-      p.signal(data.offer)
-    })
   },
   methods: {
     async call(email) {
-      this.$socket().emit('call', { email })
-      const p = await this.startPeer(true)
-      this.$socket().on('answer', (data) => {
-        p.signal(data)
-      })
+      EventBus.$emit('call', email);
     },
-    startPeer(initiator, distantSocketID) {
-      const vm = this
-      return new Promise( ( resolve, reject ) => {
-        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-          .then(function(stream) {
-            let p = new Peer({
-              initiator,
-              stream,
-              trickle: false
-            })
-            vm.bindEvents(p, distantSocketID)
-            resolve(p)
-          })
-          .catch(function(err) {
-            reject(err.name + ": " + err.message)
-          })
-      })
-    },
-    bindEvents(p, distantSocketID) {
-      let vm = this
-      p.on('error', function(err) {
-        console.error(err)
-      })
-      p.on('signal', function(data) {
-        if (data.type === 'offer') {
-          vm.$socket().emit('offer', data)
-        } else if (data.type === 'answer') {
-          vm.$socket().emit('answer', {to: distantSocketID, data} )
-        }
-      })
-      p.on('stream', function(stream) {
-        var audioPlayer = vm.$refs.audio
-        if ("srcObject" in audioPlayer) {
-          audioPlayer.srcObject = stream
-        } else {
-          // Avoid using this in new browsers, as it is going away.
-          audioPlayer.src = window.URL.createObjectURL(stream);
-        }
-      })
-    }
   }
 }
 </script>
