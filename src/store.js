@@ -1,6 +1,7 @@
 var store = {
   state: {
-    connectedUser: null
+    connectedUser: null,
+    userStream: null
   },
   loggedIn () {
     return (this.state.connectedUser)?true:false

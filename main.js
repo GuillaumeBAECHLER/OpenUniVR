@@ -5,7 +5,7 @@ import App from './src/App.vue'
 import router from './src/router'
 import io from 'socket.io-client'
 
-let url = 'http://192.168.43.187:3000'
+let url = 'http://192.168.0.7:3000'
 let socket
 let getSocket = function () {
   if (!socket) {

@@ -5,6 +5,7 @@
 <script lang="ts">
 import Peer from 'simple-peer'
 import { EventBus } from '../event-bus'
+import store from '../store'
 
 export default {
   name: 'CallManager',
@@ -33,22 +34,13 @@ export default {
       })
     },
     startPeer(initiator, distantSocketID) {
-      const vm = this
-      return new Promise( ( resolve, reject ) => {
-        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-          .then(function(stream) {
-            let p = new Peer({
-              initiator,
-              stream,
-              trickle: false
-            })
-            vm.bindEvents(p, distantSocketID)
-            resolve(p)
-          })
-          .catch(function(err) {
-            reject(err.name + ": " + err.message)
-          })
+      let p = new Peer({
+        initiator,
+        stream: store.state.userStream,
+        trickle: false
       })
+      this.bindEvents(p, distantSocketID)
+      return p
     },
     bindEvents(p, distantSocketID) {
       let vm = this
