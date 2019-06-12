@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     async call(email) {
-      EventBus.$emit('call', email);
+      EventBus.$emit('call', email)
     },
   }
 }

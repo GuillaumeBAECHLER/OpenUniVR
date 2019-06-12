@@ -1,7 +1,7 @@
 <template>
     <a-entity>
       <a-camera fov="60">
-        <a-cursor></a-cursor>
+        <a-cursor v-if="!(AFRAME.utils.device.isOculusGo())"></a-cursor>
       </a-camera>
       <a-entity laser-controls="hand: right">
       </a-entity>
@@ -16,10 +16,13 @@
 
 <script>
 import Users from './Users.vue'
+import AFRAME from 'aframe'
+
 export default {
   name: 'user',
   data: () => ({
-    dialog: false
+    dialog: false,
+    AFRAME
   }),
   components: {
     Users

@@ -1,19 +1,24 @@
 <template>
-  <audio autoplay ref="audio"></audio>
+  <div>
+    <my-audio v-for="connectedUser in connectedUsers" :key="connectedUser.id" :stream="connectedUser.stream"/>
+  </div>
 </template>
 
 <script lang="ts">
 import Peer from 'simple-peer'
 import { EventBus } from '../event-bus'
 import store from '../store'
+import MyAudio from './MyAudio.vue'
 
 export default {
   name: 'CallManager',
   data: () => ({
     connectedUsers: []
   }),
+  components: {
+    MyAudio
+  },
   async created () {
-    console.log('CREATED AUDIO')
     const vm = this
     this.$socket().on('incoming_call', async (data) => {
       const user = data.user
@@ -55,13 +60,10 @@ export default {
         }
       })
       p.on('stream', function(stream) {
-        var audioPlayer = vm.$refs.audio
-        if ("srcObject" in audioPlayer) {
-          audioPlayer.srcObject = stream
-        } else {
-          // Avoid using this in new browsers, as it is going away.
-          audioPlayer.src = window.URL.createObjectURL(stream);
-        }
+        vm.connectedUsers.push({
+          id: distantSocketID,
+          stream
+        })
       })
     }
   }
