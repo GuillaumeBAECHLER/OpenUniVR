@@ -52,6 +52,7 @@ io.on('connection', function(socket){
             io.to(socket.id).emit('users', Object.values(homeUsers))
             homeUsers[session.current_user.email] = {
               id: socket.id,
+              email: session.current_user.email,
               firstname: session.current_user.firstname,
               position: {x:0, y:0, z:0}
             }
