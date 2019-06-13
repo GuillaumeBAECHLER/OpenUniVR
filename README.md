@@ -81,3 +81,34 @@ Il vous faudra une base de données MariaDB, le plus simple est d'utiliser docke
 docker run --name open_univer_mariadb -e MYSQL_ROOT_PASSWORD=secret_password -p 3306:3306 -d mariadb
 ```
 
+Il vous faudra aussi une base de données redis, le plus simple est d'utiliser docker mais vous pouvez faire comme bon vous semble ...
+
+```bash
+docker run --name open_univer_redis -p 6379:6379 -d redis
+```
+
+Installez aussi MySQLWorbench :
+https://dev.mysql.com/downloads/workbench/
+
+Créez un nouveau schéma que vous nommerez openunivr, puis créez la table account :
+
+CREATE TABLE `account` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `lastname` varchar(60) NOT NULL,
+  `firstname` varchar(60) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `salt` varchar(16) NOT NULL,
+  `connection_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+
+Des changements d'IP sont nécéssaires dans server.js (lignes 15 et 145) puis dans le main.js (ligne 8).
+
+Lancez ensuite la commande npm run dev après les modifications et stopper ce run.
+
+Il faut maintenant lancer le server, avec node :
+node server.js (dans le dossier du serveur du projet)
+
+BRAVO !! Maintenant, en tappant l'adresse IP renseigné dans les fichiers précédents avec le port 3000 (192.168.x.x:3000) tu aura l'acces à une application impressionnante !
