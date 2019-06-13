@@ -48,15 +48,18 @@ Si vous n'utilisez pas encore [Git](https://git-scm.com/)... c'est le moment de 
 Si vous débutez avec Git, un tutoriel sympa est dispo [ici](https://learngitbranching.js.org/), et si vous avez le temps, c'est pas mal les [SSH Keys](https://docs.gitlab.com/ee/ssh/) !
 Si vous souhaitez signer vos commits, direction les [GPG Keys](https://docs.gitlab.com/ee/user/project/repository/gpg_signed_commits/).
 
+### Le front
+
 ```bash
+# si vous utilisez les ssh keys :
 $ git clone git@gitlab.com:GuillaumeBAECHLER/openunivr.git
-# si vous utilisez les ssh keys sinon :
+#  sinon avec https :
 $ git clone https://gitlab.com/GuillaumeBAECHLER/openunivr.git
 $ cd openunivr
 $ npm i
 # ou avec Yarn :
 $ yarn
-# Installer Parcel
+# Installer Parcel en global
 $ npm install -g parcel-bundler
 # ou avec Yarn :
 $ yarn global add parcel-bundler
@@ -69,3 +72,12 @@ $ npm run dev
 # ou avec Yarn :
 $ yarn dev
 ```
+
+### Le serveur
+
+Il vous faudra une base de données MariaDB, le plus simple est d'utiliser docker mais vous pouvez faire comme bon vous semble ...
+
+```bash
+docker run --name open_univer_mariadb -e MYSQL_ROOT_PASSWORD=secret_password -p 3306:3306 -d mariadb
+```
+
