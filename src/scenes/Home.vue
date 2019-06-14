@@ -16,11 +16,12 @@
     ></a-circle>
     <a-entity :gltf-model="university_home"></a-entity>
     <user ref="user"></user>
-    <a-box
+    <a-entity
       v-for="(user, index) in users"
       :key="`user-${index}`"
+      :gltf-model="character"
       :position="`${user.position.x} ${user.position.y} ${user.position.z}`"
-      color="red"></a-box>
+    ></a-entity>
   </a-scene>
 </template>
 
@@ -31,6 +32,7 @@ import store from '../store'
 
 const assets = {
   university_home: require('../assets/home.glb'),
+  character: require('../assets/character.glb')
 }
 
 export default {
