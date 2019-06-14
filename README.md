@@ -75,9 +75,48 @@ $ yarn dev
 
 ### Le serveur
 
-Il vous faudra une base de données MariaDB, le plus simple est d'utiliser docker mais vous pouvez faire comme bon vous semble ...
+Il vous faudra une base de données MariaDB et un Redis, le plus simple est d'utiliser docker mais vous pouvez faire comme bon vous semble ...
 
 ```bash
 docker run --name open_univer_mariadb -e MYSQL_ROOT_PASSWORD=secret_password -p 3306:3306 -d mariadb
+
+docker run --name open_univer_redis -p 6379:6379 -d redis
 ```
 
+Installez aussi [MySQLWorbench](https://dev.mysql.com/downloads/workbench/).
+
+Connectez vous à votre base de données.
+
+Si vous utilisez docker toolbox (windows != windows 10 pro), vous pourrez trouver l'IP de votre VM Host Docker grâce à la commande :
+
+```bash
+docker-machine ip
+```
+
+Créez un nouveau schéma que vous nommerez openunivr, puis créez la table account :
+
+```sql
+CREATE TABLE `account` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `lastname` varchar(60) NOT NULL,
+  `firstname` varchar(60) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `salt` varchar(16) NOT NULL,
+  `connection_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+```
+
+Si vous utilisez Docker Toolbox, des changements d'IP (remplacer l'IP ou le Hostname par l'IP de votre VM Host Docker) sont nécéssaires dans server.js (lignes 15 et 145) puis dans le main.js (ligne 8).
+
+Lancez ensuite la commande `npm run build` après les modifications.
+
+Il faut maintenant lancer le serveur, avec node :
+```bash
+cd ./server
+node server.js
+```
+
+BRAVO !! Maintenant, en tapant l'adresse IP renseignée dans les fichiers précédents avec le port 3000 (192.168.x.x:3000) tu auras l'accès à une application impressionnante !
