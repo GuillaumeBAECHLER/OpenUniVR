@@ -16,6 +16,13 @@ let getSocket = function () {
   return socket
 }
 
+let colors = [
+  '#26547C',
+  '#EF476F',
+  '#FFD166',
+  '#06D6A0',
+  '#FFFCF9'
+]
 
 AFRAME.registerComponent('show-clickable-on-hover', {
   init: function () {
@@ -29,6 +36,21 @@ AFRAME.registerComponent('show-clickable-on-hover', {
           node.material.emissive.set('#000')
         })
         node.material.emissiveIntensity = 0.1
+      })
+    })
+  }
+})
+
+AFRAME.registerComponent('set-color', {
+  init: function () {
+    this.el.addEventListener('model-loaded', () => {
+      const obj = this.el.getObject3D('mesh')
+      obj.children.forEach((node) => {
+        let randomColor = Math.floor(Math.random() * Math.floor(colors.length))
+        node.material = new THREE.MeshStandardMaterial({
+          color: colors[randomColor],
+          roughness: 1
+        });
       })
     })
   }

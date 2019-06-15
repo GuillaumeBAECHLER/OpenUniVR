@@ -6,7 +6,6 @@
     </a-assets>
     <a-sky src="#sky"></a-sky>
     <a-plane ref="ground" color="#827974" height="25" width="25" rotation="-90 0 0"></a-plane>
-    <a-entity light="type: point; color: #FFF; intensity: 1.2;" position="-1 7 1"></a-entity>
     <a-circle
       ref="user_position"
       position="0 0.001 0"
@@ -21,7 +20,23 @@
       :key="`user-${index}`"
       :gltf-model="character"
       :position="`${user.position.x} ${user.position.y} ${user.position.z}`"
-    ></a-entity>
+      set-color
+    >
+      <a-entity
+        geometry="primitive: plane; width: 1; height: auto"
+        material="side: double; shader: flat; blending: additive; color: #000"
+        rotation="0 -90 0"
+        position="0 2.5 0"
+        :text="{
+            value: `${user.firstname} ${user.lastname}`,
+            color: '#fff',
+            side: 'double',
+            align: 'center',
+            width: 2
+          }"
+        >
+      </a-entity>
+    </a-entity>
   </a-scene>
 </template>
 
