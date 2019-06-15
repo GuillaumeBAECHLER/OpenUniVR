@@ -1,6 +1,10 @@
 <template>
   <div>
-    <my-audio v-for="connectedUser in connectedUsers" :key="connectedUser.id" :stream="connectedUser.stream"/>
+    <my-audio
+      v-for="(stream, key) in state.userStreams"
+      :key="key"
+      :user="state.connectedUsers.find((user) => user.id === key)"
+    />
   </div>
 </template>
 
@@ -13,7 +17,7 @@ import MyAudio from './MyAudio.vue'
 export default {
   name: 'CallManager',
   data: () => ({
-    connectedUsers: []
+    state: store.state
   }),
   components: {
     MyAudio
@@ -26,14 +30,14 @@ export default {
       const p = await this.startPeer(false, user.socketID)
       p.signal(data.offer)
     })
-    EventBus.$on('call', userMail => {
-      vm.call(userMail)
+    EventBus.$on('call', user => {
+      vm.call(user)
     });
   },
   methods: {
-    async call(email) {
-      this.$socket().emit('call', { email })
-      const p = await this.startPeer(true)
+    async call(user) {
+      this.$socket().emit('call', { email: user.email })
+      const p = await this.startPeer(true, user.id)
       this.$socket().on('answer', (data) => {
         p.signal(data)
       })
@@ -60,10 +64,8 @@ export default {
         }
       })
       p.on('stream', function(stream) {
-        vm.connectedUsers.push({
-          id: distantSocketID,
-          stream
-        })
+        store.setStream(distantSocketID, stream)
+        console.log('STREAM ADDED')
       })
     }
   }

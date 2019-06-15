@@ -6,7 +6,6 @@
     </a-assets>
     <a-sky src="#sky"></a-sky>
     <a-plane ref="ground" color="#827974" height="25" width="25" rotation="-90 0 0"></a-plane>
-    <a-entity light="type: point; color: #FFF; intensity: 1.2;" position="-1 7 1"></a-entity>
     <a-circle
       ref="user_position"
       position="0 0.001 0"
@@ -16,11 +15,28 @@
     ></a-circle>
     <a-entity :gltf-model="university_home"></a-entity>
     <user ref="user"></user>
-    <a-box
-      v-for="(user, index) in users"
+    <a-entity
+      v-for="(user, index) in state.connectedUsers"
       :key="`user-${index}`"
+      :gltf-model="character"
       :position="`${user.position.x} ${user.position.y} ${user.position.z}`"
-      color="red"></a-box>
+      set-color
+    >
+      <a-entity
+        geometry="primitive: plane; width: 1; height: auto"
+        material="side: double; shader: flat; blending: additive; color: #000"
+        rotation="0 -90 0"
+        position="0 2.5 0"
+        :text="{
+            value: `${user.firstname} ${user.lastname}`,
+            color: '#fff',
+            side: 'double',
+            align: 'center',
+            width: 2
+          }"
+        >
+      </a-entity>
+    </a-entity>
   </a-scene>
 </template>
 
@@ -31,12 +47,13 @@ import store from '../store'
 
 const assets = {
   university_home: require('../assets/home.glb'),
+  character: require('../assets/character.glb')
 }
 
 export default {
   name: 'home',
   data: () => ({
-    users: [],
+    state: store.state,
     ...assets
   }),
   components: {
@@ -47,24 +64,25 @@ export default {
     this.$refs.ground.setAttribute('move-on-click', {movingObject: this.$refs.user.$el, marker: this.$refs.user_position})
     this.$socket().emit('connect_to_room', 'home')
     this.$socket().on('user_connected', (connected_user) => {
-      vm.users = [
-        ...(vm.users.filter((user) => user.id != connected_user.id)),
+      store.setConnectedUsers([
+        ...(vm.state.connectedUsers.filter((user) => user.id != connected_user.id)),
         connected_user
-      ]
+      ])
     })
     this.$socket().on('user_moved', (moved_user) => {
-      vm.users = [
-        ...(vm.users.filter((user) => user.id != moved_user.id)),
+
+      store.setConnectedUsers([
+        ...(vm.state.connectedUsers.filter((user) => user.id != moved_user.id)),
         moved_user
-      ]
+      ])
     })
     this.$socket().on('users', (users) => {
       console.log(users)
       // recieving users
-      vm.users = users
+      store.setConnectedUsers(users)
       for (let user of users) {
         if (store.state.connectedUser.email != user.email)
-        EventBus.$emit('call', user.email)
+        EventBus.$emit('call', user)
       }
       // 
     })

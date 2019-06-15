@@ -65,7 +65,7 @@ export default {
       }
       try {
         const response = await this.$http.post('/login', payload)
-        store.setLogin(response.data)
+        store.setUser(response.data)
         this.$router.push({ name: 'app' })
       } catch (err) {
         console.error(err)
@@ -82,7 +82,7 @@ export default {
       try {
         const response = await this.$http.post('/register', payload)
         this.connectedUser = response.data
-        store.setLogin(response.data)
+        store.setUser(response.data)
         this.$router.push({ name: 'app' })
       } catch (err) {
         console.error(err)
