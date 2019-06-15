@@ -54,6 +54,7 @@ io.on('connection', function(socket){
               id: socket.id,
               email: session.current_user.email,
               firstname: session.current_user.firstname,
+              lastname: session.current_user.lastname,
               position: {x:0, y:0, z:0}
             }
             socket.broadcast.to(room).emit('user_connected', homeUsers[session.current_user.email])
