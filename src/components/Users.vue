@@ -18,7 +18,7 @@
             position="0.4 0 0.01"
             animation__mouseenter="startEvents: mouseenter; property: scale; to: 1.2 1.2 1.2; dur: 100; easing: linear;"
             animation__mouseleave="startEvents: mouseleave; property: scale; to: 1 1 1; dur: 100; easing: linear;"
-            @click="call(user.email)"
+            @click="call(user)"
           />
         </a-entity>
     </a-entity>
@@ -39,8 +39,8 @@ export default {
     console.log('GOT USERS')
   },
   methods: {
-    async call(email) {
-      EventBus.$emit('call', email)
+    async call(user) {
+      EventBus.$emit('call', user)
     },
   }
 }

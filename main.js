@@ -4,8 +4,10 @@ import axios from 'axios'
 import App from './src/App.vue'
 import router from './src/router'
 import io from 'socket.io-client'
+import store from './src/store'
+import { EventBus } from './src/event-bus'
 
-let url = 'http://192.168.2.2:3000'
+let url = 'http://192.168.43.187:3000'
 let socket
 let getSocket = function () {
   if (!socket) {
@@ -62,6 +64,11 @@ AFRAME.registerComponent('move-on-click', {
           newPosition
         )
         getSocket().emit('move', newPosition)
+        store.setUser({
+          ...store.state.connectedUser,
+          position: newPosition
+        })
+        EventBus.$emit('move')
       }, 1000)
     })
     this.el.addEventListener('mouseup', () => {
