@@ -34,7 +34,8 @@ Pour la partie modélisation 3D, nous utiliserons le logiciel Open-Source **Blen
 
 ### Les spécifications graphiques
 
-TODO
+La charte graphique : #26547C, #EF476F, #FFD166, #06D6A0, #FFFCF9
+
 
 ### La gestion du projet
 
